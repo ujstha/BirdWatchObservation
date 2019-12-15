@@ -59,7 +59,7 @@ setupConfig({
 
 const theme = createMuiTheme({
   typography: {
-    fontFamily: ["Raleway", "Montserrat", "sans-serif"].join(","),
+    fontFamily: ["Work Sans", "Raleway", "Montserrat", "sans-serif"].join(","),
   },
 });
 

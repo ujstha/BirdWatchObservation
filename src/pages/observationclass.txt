@@ -1,0 +1,179 @@
+import React, { useState, Component } from "react";
+import {
+  IonHeader,
+  IonToolbar,
+  IonPage,
+  IonTitle,
+  IonContent,
+  IonButtons,
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardTitle,
+  IonList,
+  IonMenuButton,
+  IonIcon,
+} from "@ionic/react";
+import axios from "axios";
+import { Button } from "@material-ui/core";
+import { cloudUpload } from "ionicons/icons";
+
+const INITIAL_STATE = {
+  speciesImage: "",
+  speciesName: "",
+  rarity: "",
+  notes: "",
+};
+export class AddObservation extends Component {
+  state: any = {};
+  props: any = {};
+  constructor(props: any) {
+    super(props);
+    this.state = { ...INITIAL_STATE };
+  }
+
+  handleChange = (props: any) => {
+    this.setState({
+      [props.target.name]: props.target.value,
+    });
+  };
+
+  handleImageChange = (props: any) => {
+    this.setState({
+      speciesImage: props.target.files[0],
+    });
+  };
+
+  AddObservation = (props: any) => {
+    props.preventDefault();
+
+    const { speciesImage, speciesName, rarity, notes } = this.state;
+    const formData = new FormData();
+
+    formData.append("speciesImage", speciesImage);
+    formData.append("speciesName", speciesName);
+    formData.append("rarity", rarity);
+    formData.append("notes", notes);
+
+    axios
+      .post("http://localhost:5000/api/birdwatchobservation", formData)
+      .then(res => {
+        console.log(res);
+      })
+      .catch(err => console.log(err.response.data));
+  };
+  render() {
+    const { speciesImage, speciesName, rarity, notes } = this.state;
+    const imageName =
+      speciesImage && speciesImage.name
+        ? speciesImage.name
+        : "Choose an Image....";
+    return (
+      <IonPage>
+        <IonHeader>
+          <IonToolbar>
+            <IonButtons slot="start">
+              <IonMenuButton />
+            </IonButtons>
+            <IonTitle>New Observation</IonTitle>
+          </IonToolbar>
+        </IonHeader>
+        <IonContent>
+          <IonList>
+            <IonCard className="welcome-card">
+              <IonCardHeader>
+                <IonCardTitle className="text-center text-uppercase">
+                  New Observation
+                </IonCardTitle>
+              </IonCardHeader>
+              <IonCardContent>
+                <form
+                  className="MuiPaper-root"
+                  onSubmit={e => this.AddObservation(e)}
+                >
+                  <input
+                    type="text"
+                    className="form-control mt-2 rounded-0"
+                    placeholder="Write species name *"
+                    onChange={e => this.handleChange(e)}
+                    name="speciesName"
+                  />
+
+                  <select
+                    className="form-control mt-2 rounded-0"
+                    placeholder="Select Rarity *"
+                    onChange={e => this.handleChange(e)}
+                    name="rarity"
+                  >
+                    <option value="">Select Rarity</option>
+                    <option value="common">Common</option>
+                    <option value="rare">Rare</option>
+                    <option value="extremely rare">Extremely Rare</option>
+                  </select>
+
+                  <input
+                    type="text"
+                    className="form-control mt-2 rounded-0"
+                    placeholder="Write notes *"
+                    onChange={e => this.handleChange(e)}
+                    name="notes"
+                  />
+
+                  <div className="clearfix w-100">
+                    <label
+                      htmlFor="file-upload"
+                      className="file-upload-button mt-2 mb-0"
+                    >
+                      <span>
+                        <IonIcon icon={cloudUpload} /> {imageName}
+                      </span>
+                    </label>
+                    <input
+                      id="file-upload"
+                      type="file"
+                      className="rounded-0"
+                      accept="image/*"
+                      onChange={e => this.handleImageChange(e)}
+                      name="speciesImage"
+                    />
+
+                    {speciesImage && imageName && (
+                      <img
+                        src={URL.createObjectURL(speciesImage)}
+                        alt={imageName}
+                        style={{ height: 80, width: 80 }}
+                        className="float-right mt-2"
+                      />
+                    )}
+                  </div>
+
+                  <Button
+                    type="reset"
+                    variant="contained"
+                    color="secondary"
+                    className="mt-3 rounded-0"
+                    style={{ width: "calc(50% - 8px)", marginRight: 16 }}
+                  >
+                    Reset
+                  </Button>
+
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                    className="mt-3 rounded-0"
+                    style={{ width: "calc(50% - 8px)" }}
+                  >
+                    Save
+                  </Button>
+                </form>
+              </IonCardContent>
+            </IonCard>
+          </IonList>
+        </IonContent>
+      </IonPage>
+    );
+  }
+}
+
+export default AddObservation;

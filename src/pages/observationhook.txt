@@ -27,7 +27,7 @@ const AddObservation: React.FC = () => {
   const [base64, setBase64] = useState(Object);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  
+
   const handleImageChange = (e: any) => {
     let file = e.target.files[0];
     setSpeciesImage(file);
@@ -115,10 +115,10 @@ const AddObservation: React.FC = () => {
                     htmlFor="file-upload"
                     className="file-upload-button mt-2 mb-0"
                   >
-                    <div className="file-name">
+                    <span>
                       <IonIcon icon={cloudUpload} />{" "}
                       {imageName ? imageName : "Upload an Image...."}
-                    </div>
+                    </span>
                   </label>
                   <input
                     id="file-upload"
@@ -150,11 +150,7 @@ const AddObservation: React.FC = () => {
                   type="submit"
                   className="mt-3 rounded-0 MuiButton-contained MuiButton-containedPrimary"
                   style={{ width: "calc(50% - 8px)" }}
-                  disabled={
-                    speciesImage && speciesImage["size"] <= 2000000
-                      ? false
-                      : true
-                  }
+                  disabled={speciesImage && speciesImage["size"] <= 2000000 ? false : true}
                 >
                   Save
                 </Button>

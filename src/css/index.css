@@ -1,4 +1,25 @@
 .md,
 .ios {
-  --ion-font-family: "Raleway";
+  --ion-font-family: "Work Sans", "Raleway", "Montserrat", "sans-serif";
+}
+ion-card,
+.MuiPaper-root {
+  border-radius: 0 !important;
+}
+input[type="file"] {
+  display: none;
+}
+.file-upload-button {
+  border: 1px solid #ccc;
+  display: inline-block;
+  max-width: calc(100% - 90px);
+  padding: 6px 12px;
+  cursor: pointer;
+  background-color: #ccc;
+  color: black;
+}
+.file-upload-button .file-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
