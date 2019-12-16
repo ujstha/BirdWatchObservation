@@ -55,7 +55,7 @@ ion-page.ion__home-container {
   z-index: 99999999999999;
   background-color: black;
 }
-.full-image-view  > div {
+.full-image-view > div {
   position: absolute;
   left: 0;
   /* make the top edge of .full-image-view > diva ppear in the vertical center of .full-image-view */
@@ -118,7 +118,7 @@ ion-card-content.species-data-content {
   height: 275px;
   bottom: 0;
   left: -100%;
-  background-color: rgba(0, 0, 0, 0.9);
+  background-color: rgba(0, 0, 0, 1);
   transition: all 0.6s ease-in-out;
 }
 ion-icon.reverse,
@@ -139,12 +139,24 @@ ion-card-content.species-data {
   left: 0;
   transition: all 0.6s ease-in-out;
 }
+ion-card-content.species-data-content {
+  overflow-y: auto;
+  font-family: "Raleway";
+}
+ion-card-content.species-data-content p {
+  font-size: 1.1em;
+  padding: 2px;
+}
+p > span {
+  font-size: 1.15em;
+  text-transform: capitalize;
+}
 .fa-map-marked-alt,
 .fa-info-circle {
   cursor: pointer;
   font-size: 24px;
 }
-.map-info-icon{
+.map-info-icon {
   position: absolute;
   z-index: 99999 !important;
 }

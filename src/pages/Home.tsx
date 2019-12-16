@@ -13,12 +13,15 @@ import {
   IonCardHeader,
   IonIcon,
   IonCardContent,
-  IonPopover
+  IonPopover,
+  IonRefresher,
+  IonRefresherContent
 } from "@ionic/react";
 import axios from "axios";
 import moment from "moment";
 import { arrowForward } from "ionicons/icons";
 import { Paper, Button } from "@material-ui/core";
+import { RefresherEventDetail } from "@ionic/core";
 
 const Home: React.FC = () => {
   const [observations, setObservations] = useState([]);
@@ -29,7 +32,8 @@ const Home: React.FC = () => {
   const [map, setMap] = useState(false);
   const [info, setInfo] = useState(false);
 
-  React.useEffect(() => {
+  const GetData = () => {
+    //need to call same thing two times so made one function and called that below.
     axios
       .get(
         "https://birdwatchobservation.herokuapp.com/api/birdwatchobservation"
@@ -42,7 +46,17 @@ const Home: React.FC = () => {
         setObservations(res.data);
       })
       .catch(err => console.log(err.response));
-  }, []);
+  };
+
+  function doRefresh(event: CustomEvent<RefresherEventDetail>) {
+    GetData(); //calling axios get function to get new data if there's any
+
+    setTimeout(() => {
+      event.detail.complete();
+    }, 2000);
+  }
+
+  React.useEffect(() => GetData(), []);
 
   const ExpandDetails = (id: any) => {
     localStorage.setItem("ID", id); //saving ID in localhost
@@ -93,7 +107,7 @@ const Home: React.FC = () => {
             className="fa fa-times text-light"
             onClick={() => {
               localStorage.removeItem("imgSrc");
-              document.location.href = "/";
+              document.location.href = "/home";
             }}
           ></span>
           <div>
@@ -111,11 +125,15 @@ const Home: React.FC = () => {
       </IonHeader>
       <IonContent>
         {isLoading && <IonProgressBar type="indeterminate" />}
+        <IonRefresher slot="fixed" onIonRefresh={doRefresh}>
+          <IonRefresherContent></IonRefresherContent>
+        </IonRefresher>
         <Button
           className="m-0 rounded-0"
           fullWidth
           variant="contained"
           onClick={() => setShowPopover(true)}
+          size="large"
         >
           Sort the List
         </Button>
@@ -153,7 +171,6 @@ const Home: React.FC = () => {
             const colorChange =
               observation["geoLongitude"] &&
               observation["geoLatitude"] &&
-              (map || info) &&
               localStorage.ID === observation["_id"]
                 ? true
                 : false;
@@ -176,7 +193,7 @@ const Home: React.FC = () => {
                       className="fullscreen-species-image"
                       onClick={() => {
                         localStorage.imgSrc = observation["speciesImage"];
-                        document.location.href = "/";
+                        document.location.href = "/home";
                       }}
                     >
                       <i className="fa fa-expand"></i>
@@ -190,8 +207,12 @@ const Home: React.FC = () => {
                           className="float-right more-detail"
                           onClick={() => {
                             ExpandDetails(observation["_id"]);
-                            setInfo(!info);
-                            setMap(false);
+                            if (info || map) {
+                              setInfo(false);
+                              setMap(false);
+                            } else if (!info) {
+                              setInfo(true);
+                            }
                           }}
                         >
                           <IonIcon
@@ -205,11 +226,12 @@ const Home: React.FC = () => {
                           />
                         </span>
                       </div>
-                      <small>
+                      <small style={{ letterSpacing: 0.7 }}>
                         Rarity : {observation["rarity"]} &nbsp; &nbsp;
                         <span className="map-info-icon">
                           <i
-                            className={`fa fa-map-marked-alt text-primary ${colorChange &&
+                            className={`fa fa-map-marked-alt text-primary ${map &&
+                              colorChange &&
                               "text-dark"}`}
                             onClick={() => {
                               ExpandDetails(observation["_id"]);
@@ -217,9 +239,10 @@ const Home: React.FC = () => {
                               setInfo(false);
                             }}
                           ></i>{" "}
-                          &nbsp;
+                          &nbsp; &nbsp;
                           <i
-                            className={`fa fa-info-circle text-primary ${colorChange &&
+                            className={`fa fa-info-circle text-primary ${map &&
+                              colorChange &&
                               "text-dark"}`}
                             onClick={() => {
                               ExpandDetails(observation["_id"]);
@@ -257,13 +280,35 @@ const Home: React.FC = () => {
                       )}
                     </IonCardContent>
                     <IonCardContent
-                      className={`species-data-content ${
+                      className={`species-data-content text-light  ${
                         info && observation["_id"] === localStorage.ID
                           ? "species-data ion-no-margin"
                           : ""
                       }`}
                     >
-                      <h3>{observation["notes"]}</h3>
+                      <p>
+                        Species Name : <br />
+                        <span>{observation["speciesName"]}</span>
+                      </p>
+                      <p>
+                        Species Rarity : <br />
+                        <span>{observation["rarity"]}</span>
+                      </p>
+                      <p>
+                        Notes : <br />
+                        <span>{observation["notes"]}</span>
+                      </p>
+                      {observation["timestamp"] && (
+                        <p>
+                          DateTimeOriginal : <br />
+                          <span>
+                            {moment
+                              .unix(observation["timestamp"])
+                              .format("Do MMM, YYYY HH:MM A")}
+                          </span>
+                          {/* timestamp is saved as number in db so need UNIX to get exact datetime */}
+                        </p>
+                      )}
                     </IonCardContent>
                   </div>
                 </IonCard>
