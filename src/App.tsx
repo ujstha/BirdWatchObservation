@@ -70,7 +70,7 @@ const App: React.FC = () => {
   const [getView, setGetView] = useState(false);
 
   const resize = () => {
-    let currentView = window.innerWidth > 385; //mobile device width increase or decrease accordingly
+    let currentView = window.innerWidth > 768; //mobile device width increase or decrease accordingly
     if (currentView !== getView) {
       setGetView(currentView);
     }
