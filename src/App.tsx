@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Redirect, Route } from "react-router-dom";
 import {
   IonApp,
@@ -66,71 +66,90 @@ const theme = createMuiTheme({
   }
 });
 
-const App: React.FC = () => (
-  <MuiThemeProvider theme={theme}>
-    <IonApp>
-      {isPlatform("desktop") && (
-        <IonPopover isOpen={true} onDidDismiss={() => false}>
-          <p
-            className="m-4 text-center"
-            style={{ fontSize: 18, fontFamily: "Raleway" }}
-          >
-            You are in desktop mode. Please press "F12" to view in mobile mode and
-            get best experience of the app.
-          </p>
-        </IonPopover>
-      )}
-      <IonReactRouter>
-        {/* Enable IonSplitPane to enforces mobile view */}
-        <IonSplitPane contentId="main">
-          <Menu appPages={appPages} />
-          {!localStorage.imgSrc || localStorage.imgSrc === "" ? (
-            <IonTabs>
-              <IonRouterOutlet id="main">
-                <Route
-                  path="/"
-                  render={() => <Redirect to="/home" />}
-                  exact={true}
-                />
-                <Route path="/home" component={Home} exact={true} />
-                <Route
-                  path="/add-observation"
-                  component={AddObservation}
-                  exact={true}
-                />
-              </IonRouterOutlet>
-              <IonTabBar slot="bottom">
-                <IonTabButton tab="home" href="/home">
-                  <IonIcon icon={home} />
-                  <IonLabel>HOME</IonLabel>
-                </IonTabButton>
-                <IonTabButton tab="add-observation" href="/add-observation">
-                  <IonIcon icon={add} />
-                  <IonLabel>ADD OBSERVATION</IonLabel>
-                </IonTabButton>
-              </IonTabBar>
-            </IonTabs>
-          ) : (
-            <>
-              <IonRouterOutlet id="main">
-                <Route
-                  path="/"
-                  render={() => <Redirect to="/home" />}
-                  exact={true}
-                />
-                <Route path="/home" component={Home} exact={true} />
-                <Route
-                  path="/add-observation"
-                  component={AddObservation}
-                  exact={true}
-                />
-              </IonRouterOutlet>
-            </>
-          )}
-        </IonSplitPane>
-      </IonReactRouter>
-    </IonApp>
-  </MuiThemeProvider>
-);
+const App: React.FC = () => {
+  const [getView, setGetView] = useState(false);
+
+  const resize = () => {
+    let currentView = window.innerWidth > 385; //mobile device width increase or decrease accordingly
+    if (currentView !== getView) {
+      setGetView(currentView);
+    }
+    if (currentView && !getView) {
+      setGetView(currentView);
+    }
+  };
+
+  React.useEffect(() => {
+    window.addEventListener("resize", resize); //listening to resize event of window
+    resize();
+  });
+
+  return (
+    <MuiThemeProvider theme={theme}>
+      <IonApp>
+        {(isPlatform("desktop") || getView) && (
+          <IonPopover isOpen={getView} onDidDismiss={() => setGetView(false)}>
+            <p
+              className="m-4 text-center"
+              style={{ fontSize: 18, fontFamily: "Raleway" }}
+            >
+              You are in desktop mode. Please press "F12" to view in mobile mode
+              and get best experience of the app.
+            </p>
+          </IonPopover>
+        )}
+        <IonReactRouter>
+          {/* Enable IonSplitPane to enforces mobile view */}
+          <IonSplitPane contentId="main">
+            <Menu appPages={appPages} />
+            {!localStorage.imgSrc || localStorage.imgSrc === "" ? (
+              <IonTabs>
+                <IonRouterOutlet id="main">
+                  <Route
+                    path="/"
+                    render={() => <Redirect to="/home" />}
+                    exact={true}
+                  />
+                  <Route path="/home" component={Home} exact={true} />
+                  <Route
+                    path="/add-observation"
+                    component={AddObservation}
+                    exact={true}
+                  />
+                </IonRouterOutlet>
+                <IonTabBar slot="bottom">
+                  <IonTabButton tab="home" href="/home">
+                    <IonIcon icon={home} />
+                    <IonLabel>HOME</IonLabel>
+                  </IonTabButton>
+                  <IonTabButton tab="add-observation" href="/add-observation">
+                    <IonIcon icon={add} />
+                    <IonLabel>ADD OBSERVATION</IonLabel>
+                  </IonTabButton>
+                </IonTabBar>
+              </IonTabs>
+            ) : (
+              <>
+                <IonRouterOutlet id="main">
+                  <Route
+                    path="/"
+                    render={() => <Redirect to="/home" />}
+                    exact={true}
+                  />
+                  <Route path="/home" component={Home} exact={true} />
+                  <Route
+                    path="/add-observation"
+                    component={AddObservation}
+                    exact={true}
+                  />
+                </IonRouterOutlet>
+              </>
+            )}
+          </IonSplitPane>
+        </IonReactRouter>
+      </IonApp>
+    </MuiThemeProvider>
+  );
+};
 
 export default App;
