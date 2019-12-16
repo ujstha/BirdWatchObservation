@@ -302,7 +302,7 @@ const Home: React.FC = () => {
                         observation["geoLongitude"] && (
                           <p style={{ fontSize: 12 }} className="text-center">
                             Image was taken at a location with{" "}
-                            {observation["geoLatitude"]} latitude and{" "}
+                            {observation["geoLatitude"]} Latitude and{" "}
                             {observation["geoLongitude"]} Longitude.
                           </p>
                         )}
