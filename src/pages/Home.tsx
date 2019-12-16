@@ -100,7 +100,7 @@ const Home: React.FC = () => {
     sortedObservation = observations;
   }
   return (
-    <IonPage className="ion__home-container">
+    <IonPage className="ion__home-container" id="main">
       {localStorage.imgSrc && localStorage.imgSrc !== "" && (
         <div className="full-image-view">
           <span
@@ -128,15 +128,17 @@ const Home: React.FC = () => {
         <IonRefresher slot="fixed" onIonRefresh={doRefresh}>
           <IonRefresherContent></IonRefresherContent>
         </IonRefresher>
-        <Button
-          className="m-0 rounded-0"
-          fullWidth
-          variant="contained"
-          onClick={() => setShowPopover(true)}
-          size="large"
-        >
-          Sort the List
-        </Button>
+        {!isLoading && observations.length !== 0 && (
+          <Button
+            className="m-0 rounded-0"
+            fullWidth
+            variant="contained"
+            onClick={() => setShowPopover(true)}
+            size="large"
+          >
+            Sort the List
+          </Button>
+        )}
         <IonPopover
           isOpen={showPopover}
           onDidDismiss={() => setShowPopover(false)}
@@ -156,6 +158,16 @@ const Home: React.FC = () => {
             Sort Alphabetically
           </IonList>
         </IonPopover>
+        {alphaSort && (
+          <div className="text-info text-center pt-1">
+            Sorted Alphabetically (A - Z).
+          </div>
+        )}
+        {dateSort && (
+          <div className="text-info text-center pt-1">
+            Latest Upload Date at first.
+          </div>
+        )}
         {observations.length === 0 && !isLoading ? (
           <IonList className="text-center p-2 mt-5">
             <h2>
@@ -286,6 +298,14 @@ const Home: React.FC = () => {
                           : ""
                       }`}
                     >
+                      {observation["geoLatitude"] &&
+                        observation["geoLongitude"] && (
+                          <p style={{ fontSize: 12 }} className="text-center">
+                            Image was taken at a location with{" "}
+                            {observation["geoLatitude"]} latitude and{" "}
+                            {observation["geoLongitude"]} Longitude.
+                          </p>
+                        )}
                       <p>
                         Species Name : <br />
                         <span>{observation["speciesName"]}</span>

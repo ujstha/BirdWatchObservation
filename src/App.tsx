@@ -110,6 +110,7 @@ const App: React.FC = () => (
                   component={AddObservation}
                   exact={true}
                 />
+                
               </IonRouterOutlet>
             </>
           )}

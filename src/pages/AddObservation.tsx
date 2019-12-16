@@ -13,7 +13,7 @@ import {
   IonList,
   IonMenuButton,
   IonIcon,
-  IonLoading,
+  IonLoading
 } from "@ionic/react";
 import axios from "axios";
 import { Button } from "@material-ui/core";
@@ -26,6 +26,7 @@ const AddObservation: React.FC = () => {
   const [notes, setNotes] = useState("");
   const [speciesImage, setSpeciesImage] = useState("");
   const [imageName, setImageName] = useState("");
+  const [imageType, setImageType] = useState("");
   const [base64, setBase64] = useState(Object);
   const [responseColor, setResponseColor] = useState("");
   const [response, setResponse] = useState("");
@@ -42,6 +43,7 @@ const AddObservation: React.FC = () => {
         setBase64(reader.result);
       };
       setImageName(file.name);
+      setImageType(file.type);
       setResponse("");
     }
   };
@@ -121,7 +123,7 @@ const AddObservation: React.FC = () => {
               <IonLoading
                 isOpen={isLoading}
                 onDidDismiss={() => setIsLoading(false)}
-                message={"Saving Data..."}
+                message={"Saving Data...."}
                 duration={5000}
               />
               <form
@@ -191,6 +193,18 @@ const AddObservation: React.FC = () => {
                   accept="image/*"
                   onChange={e => handleImageChange(e)}
                 />
+                <div>
+                  <span>Note: .jpg and .jpeg formats are only allowed.</span>
+                </div>
+                {speciesImage &&
+                  imageType !== "image/jpeg" &&
+                  imageType !== "image/jpg" && (
+                    <div>
+                      <span className="text-danger">
+                        Please upload image with .jpg or .jpeg format.
+                      </span>
+                    </div>
+                  )}
 
                 {imageName && (
                   <img
@@ -200,7 +214,7 @@ const AddObservation: React.FC = () => {
                       height: 200,
                       maxHeight: 200,
                       width: "100%",
-                      objectFit: "cover",
+                      objectFit: "cover"
                     }}
                     className="mt-2"
                   />
@@ -210,7 +224,7 @@ const AddObservation: React.FC = () => {
                   type="reset"
                   className="mt-3 rounded-0 MuiButton-contained MuiButton-containedSecondary reset-btn"
                   style={{
-                    marginRight: 16,
+                    marginRight: 16
                   }}
                   onClick={() => {
                     setError("");
@@ -229,7 +243,8 @@ const AddObservation: React.FC = () => {
                     speciesName === "" ||
                     rarity === "" ||
                     notes === "" ||
-                    imageName === ""
+                    imageName === "" ||
+                    (imageType !== "image/jpeg" && imageType !== "image/jpg")
                       ? true
                       : false
                   }
