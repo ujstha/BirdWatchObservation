@@ -1,0 +1,119 @@
+.md,
+.ios {
+  --ion-font-family: "Work Sans", "Raleway", "Montserrat", "sans-serif";
+}
+.menu-title ion-title {
+  font-family: "Cookie", cursive;
+  font-size: 1.8em;
+  font-style: italic;
+}
+ion-card,
+.MuiPaper-root {
+  border-radius: 0 !important;
+}
+ion-title,
+ion-toolbar,
+ion-header {
+  --ion-background-color: rgba(0, 0, 0, 0.8);
+  color: #fff;
+}
+input[type="file"] {
+  display: none;
+}
+.file-upload-button {
+  border: 1.5px solid #ced4da;
+  display: block;
+  max-width: 100%;
+  padding: 8px 16px;
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.2);
+  font-size: 15px;
+  color: black;
+}
+.file-upload-button .file-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.MuiButton-contained.reset-btn,
+.MuiButton-contained.save-btn {
+  width: calc(50% - 8px) !important;
+  font-size: 17px !important;
+  padding: 3px !important;
+}
+/* Observation View style */
+.species-data-container {
+  position: relative;
+}
+.species-data-container ion-card-header {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: #ccc;
+  text-transform: uppercase;
+  font-size: 1.3em;
+  font-family: "Raleway";
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+.species-data-container ion-card-header .species-name::first-letter,
+.more-detail {
+  font-size: 1.4em;
+}
+.more-detail {
+  z-index: 1 !important;
+  position: absolute;
+  right: 12px;
+}
+.species-image {
+  height: 255px;
+  width: 100%;
+  max-height: 255px;
+  object-fit: cover;
+}
+ion-card-content.species-data-content {
+  position: absolute;
+  width: 100%;
+  height: 255px;
+  bottom: 0;
+  left: -100%;
+  background-color: rgba(0, 0, 0, 0.9);
+  transition: all 0.6s ease-in-out;
+}
+ion-icon.reverse,
+ion-icon.forward {
+  padding: 5px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+ion-icon.reverse {
+  transform: rotate(180deg);
+  transition: all 0.6s ease-out;
+}
+ion-icon.forward {
+  transform: rotate(0deg);
+  transition: all 0.6s ease-out;
+}
+ion-card-content.species-data {
+  left: 0;
+  transition: all 0.6s ease-in-out;
+}
+.fa-map-marked-alt,
+.fa-info-circle {
+  cursor: pointer;
+  font-size: 24px;
+}
+.map-info-icon{
+  position: absolute;
+  z-index: 99999 !important;
+}
+.fa-map-marked-alt:focus,
+.fa-map-marked-alt:hover {
+  color: #ff726f;
+}
+.fa-info-circle:focus,
+.fa-info-circle:hover {
+  color: #00c3e3;
+}

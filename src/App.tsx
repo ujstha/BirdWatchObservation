@@ -9,6 +9,7 @@ import {
   IonTabButton,
   IonIcon,
   setupConfig,
+  IonLabel,
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import { AppPage } from "./declarations";
@@ -37,7 +38,7 @@ import "@ionic/react/css/display.css";
 
 /* Theme variables */
 import "./theme/variables.css";
-import "./css/index.css";
+import "./assets/css/index.css";
 
 const appPages: AppPage[] = [
   {
@@ -87,9 +88,11 @@ const App: React.FC = () => (
             <IonTabBar slot="bottom">
               <IonTabButton tab="home" href="/home">
                 <IonIcon icon={home} />
+                <IonLabel>HOME</IonLabel>
               </IonTabButton>
               <IonTabButton tab="add-observation" href="/add-observation">
                 <IonIcon icon={add} />
+                <IonLabel>ADD OBSERVATION</IonLabel>
               </IonTabButton>
             </IonTabBar>
           </IonTabs>

@@ -13,46 +13,83 @@ import {
   IonList,
   IonMenuButton,
   IonIcon,
+  IonLoading,
 } from "@ionic/react";
 import axios from "axios";
 import { Button } from "@material-ui/core";
-import { cloudUpload } from "ionicons/icons";
+import { cloudUpload, save, close } from "ionicons/icons";
 
 const AddObservation: React.FC = () => {
+  //creating state using hook
   const [speciesName, setSpeciesName] = useState("");
   const [rarity, setRarity] = useState("");
   const [notes, setNotes] = useState("");
-  const [speciesImage, setSpeciesImage] = useState(Object);
+  const [speciesImage, setSpeciesImage] = useState("");
   const [imageName, setImageName] = useState("");
   const [base64, setBase64] = useState(Object);
+  const [responseColor, setResponseColor] = useState("");
+  const [response, setResponse] = useState("");
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-  
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleImageChange = (e: any) => {
     let file = e.target.files[0];
     setSpeciesImage(file);
     if (file) {
       let reader = new FileReader();
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(file); //converting file to base64encode
       reader.onloadend = () => {
         setBase64(reader.result);
       };
       setImageName(file.name);
+      setResponse("");
     }
   };
 
   const AddObservation = (e: any) => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append("speciesImage", speciesImage, speciesImage["name"]);
+    e.preventDefault(); //preventing default method on button click
+    setIsLoading(true); //shows loader on save button click
+
+    const formData = new FormData(); //creating new form data and append data.
+    formData.append("speciesImage", speciesImage);
     formData.append("speciesName", speciesName);
     formData.append("rarity", rarity);
     formData.append("notes", notes);
 
+    //axios POST method
     axios
-      .post("http://localhost:5000/api/birdwatchobservation", formData)
-      .then(res => console.log(res))
-      .catch(err => console.log(err.response));
+      .post(
+        "https://birdwatchobservation.herokuapp.com/api/birdwatchobservation",
+        formData
+      )
+      .then(res => {
+        if (res.data === "Error : Uploading Data was not found.") {
+          setIsLoading(false); //hiding loader on response.
+          setResponseColor("danger");
+          setResponse(res.data);
+        } else {
+          setIsLoading(false);
+          var timeleft = 3;
+          var downloadTimer = setInterval(function() {
+            setResponse(
+              `${res.data.msg} Redirecting to Home Page in ... ${timeleft} secs.`
+            );
+            setResponseColor("success");
+            timeleft -= 1;
+            if (timeleft <= 0) {
+              clearInterval(downloadTimer);
+              document.location.href = "/";
+            }
+          }, 800);
+        }
+      })
+      .catch(err => {
+        if (err.response.status !== 400) {
+          setResponseColor("danger");
+          setResponse(err.response.data);
+          setIsLoading(false);
+        }
+      });
   };
 
   return (
@@ -69,16 +106,24 @@ const AddObservation: React.FC = () => {
         <IonList>
           <IonCard className="welcome-card">
             <IonCardHeader>
-              {success && (
-                <div className="alert alert-success rounded-0 text-center">
-                  {success}
-                </div>
-              )}
               <IonCardTitle className="text-center text-uppercase">
-                New Observation
+                Add New Observation
               </IonCardTitle>
             </IonCardHeader>
             <IonCardContent>
+              {response && (
+                <div
+                  className={`alert alert-${responseColor} rounded-0 text-center`}
+                >
+                  {response}
+                </div>
+              )}
+              <IonLoading
+                isOpen={isLoading}
+                onDidDismiss={() => setIsLoading(false)}
+                message={"Saving Data..."}
+                duration={5000}
+              />
               <form
                 encType="multipart/form-data"
                 className="MuiPaper-root"
@@ -89,74 +134,107 @@ const AddObservation: React.FC = () => {
                   className="form-control mt-2 rounded-0"
                   placeholder="Write species name *"
                   onChange={e => setSpeciesName(e.target.value)}
+                  onBlur={() =>
+                    speciesName === "" ? setError("speciesName") : setError("")
+                  }
                 />
+                <span className="text-danger">
+                  {speciesName === "" &&
+                    error === "speciesName" &&
+                    "Species Name is Required."}
+                </span>
 
                 <select
                   className="form-control mt-2 rounded-0"
                   placeholder="Select Rarity *"
                   onChange={e => setRarity(e.target.value)}
                   value={rarity}
+                  onBlur={() =>
+                    rarity === "" ? setError("rarity") : setError("")
+                  }
                 >
                   <option value="">Select Rarity</option>
                   <option value="common">Common</option>
                   <option value="rare">Rare</option>
                   <option value="extremely rare">Extremely Rare</option>
                 </select>
+                <span className="text-danger">
+                  {rarity === "" && error === "rarity" && "Rarity is Required."}
+                </span>
 
                 <input
                   type="text"
                   className="form-control mt-2 rounded-0"
                   placeholder="Write notes *"
                   onChange={e => setNotes(e.target.value)}
+                  onBlur={() =>
+                    notes === "" ? setError("notes") : setError("")
+                  }
+                />
+                <span className="text-danger">
+                  {notes === "" && error === "notes" && "Notes is Required."}
+                </span>
+
+                <label
+                  htmlFor="file-upload"
+                  className="file-upload-button mt-2 mb-0"
+                >
+                  <div className="file-name">
+                    <IonIcon icon={cloudUpload} />{" "}
+                    {imageName ? imageName : "Upload an Image...."}
+                  </div>
+                </label>
+                <input
+                  id="file-upload"
+                  type="file"
+                  className="rounded-0"
+                  accept="image/*"
+                  onChange={e => handleImageChange(e)}
                 />
 
-                <div className="clearfix w-100">
-                  <label
-                    htmlFor="file-upload"
-                    className="file-upload-button mt-2 mb-0"
-                  >
-                    <div className="file-name">
-                      <IonIcon icon={cloudUpload} />{" "}
-                      {imageName ? imageName : "Upload an Image...."}
-                    </div>
-                  </label>
-                  <input
-                    id="file-upload"
-                    type="file"
-                    className="rounded-0"
-                    accept="image/*"
-                    onChange={e => handleImageChange(e)}
+                {imageName && (
+                  <img
+                    src={base64}
+                    alt={imageName}
+                    style={{
+                      height: 200,
+                      maxHeight: 200,
+                      width: "100%",
+                      objectFit: "cover",
+                    }}
+                    className="mt-2"
                   />
-
-                  {imageName && (
-                    <img
-                      src={base64}
-                      alt={imageName}
-                      style={{ height: 80, width: 80 }}
-                      className="float-right mt-2"
-                    />
-                  )}
-                </div>
+                )}
 
                 <Button
                   type="reset"
-                  className="mt-3 rounded-0 MuiButton-contained MuiButton-containedSecondary"
-                  style={{ width: "calc(50% - 8px)", marginRight: 16 }}
+                  className="mt-3 rounded-0 MuiButton-contained MuiButton-containedSecondary reset-btn"
+                  style={{
+                    marginRight: 16,
+                  }}
+                  onClick={() => {
+                    setError("");
+                    setResponse("");
+                    setBase64(Object);
+                    setImageName("");
+                  }}
                 >
-                  Reset
+                  <IonIcon icon={close} /> &nbsp; Reset
                 </Button>
 
                 <Button
                   type="submit"
-                  className="mt-3 rounded-0 MuiButton-contained MuiButton-containedPrimary"
-                  style={{ width: "calc(50% - 8px)" }}
+                  className="mt-3 rounded-0 MuiButton-contained MuiButton-containedPrimary save-btn"
                   disabled={
-                    speciesImage && speciesImage["size"] <= 2000000
-                      ? false
-                      : true
+                    speciesName === "" ||
+                    rarity === "" ||
+                    notes === "" ||
+                    imageName === ""
+                      ? true
+                      : false
                   }
                 >
-                  Save
+                  <IonIcon icon={save} /> &nbsp; Save
                 </Button>
               </form>
             </IonCardContent>
