@@ -9,7 +9,7 @@ import {
   IonTabButton,
   IonIcon,
   setupConfig,
-  IonLabel,
+  IonLabel
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import { AppPage } from "./declarations";
@@ -44,24 +44,24 @@ const appPages: AppPage[] = [
   {
     title: "Home",
     url: "/home",
-    icon: home,
+    icon: home
   },
   {
     title: "Add Observation",
     url: "/add-observation",
-    icon: add,
-  },
+    icon: add
+  }
 ];
 
 setupConfig({
   rippleEffect: true,
-  mode: "md",
+  mode: "md"
 });
 
 const theme = createMuiTheme({
   typography: {
-    fontFamily: ["Work Sans", "Raleway", "Montserrat", "sans-serif"].join(","),
-  },
+    fontFamily: ["Work Sans", "Raleway", "Montserrat", "sans-serif"].join(",")
+  }
 });
 
 const App: React.FC = () => (
@@ -70,32 +70,49 @@ const App: React.FC = () => (
       <IonReactRouter>
         <IonSplitPane contentId="main">
           <Menu appPages={appPages} />
-          <IonTabs>
-            <IonRouterOutlet id="main">
-              <Route
-                path="/"
-                render={() => <Redirect to="/home" />}
-                exact={true}
-              />
-              <Route path="/home" component={Home} exact={true} />
-              <Route
-                path="/add-observation"
-                component={AddObservation}
-                exact={true}
-              />
-            </IonRouterOutlet>
-
-            <IonTabBar slot="bottom">
-              <IonTabButton tab="home" href="/home">
-                <IonIcon icon={home} />
-                <IonLabel>HOME</IonLabel>
-              </IonTabButton>
-              <IonTabButton tab="add-observation" href="/add-observation">
-                <IonIcon icon={add} />
-                <IonLabel>ADD OBSERVATION</IonLabel>
-              </IonTabButton>
-            </IonTabBar>
-          </IonTabs>
+          {!localStorage.imgSrc || localStorage.imgSrc === "" ? (
+            <IonTabs>
+              <IonRouterOutlet id="main">
+                <Route
+                  path="/"
+                  render={() => <Redirect to="/home" />}
+                  exact={true}
+                />
+                <Route path="/home" component={Home} exact={true} />
+                <Route
+                  path="/add-observation"
+                  component={AddObservation}
+                  exact={true}
+                />
+              </IonRouterOutlet>
+              <IonTabBar slot="bottom">
+                <IonTabButton tab="home" href="/home">
+                  <IonIcon icon={home} />
+                  <IonLabel>HOME</IonLabel>
+                </IonTabButton>
+                <IonTabButton tab="add-observation" href="/add-observation">
+                  <IonIcon icon={add} />
+                  <IonLabel>ADD OBSERVATION</IonLabel>
+                </IonTabButton>
+              </IonTabBar>
+            </IonTabs>
+          ) : (
+            <>
+              <IonRouterOutlet id="main">
+                <Route
+                  path="/"
+                  render={() => <Redirect to="/home" />}
+                  exact={true}
+                />
+                <Route path="/home" component={Home} exact={true} />
+                <Route
+                  path="/add-observation"
+                  component={AddObservation}
+                  exact={true}
+                />
+              </IonRouterOutlet>
+            </>
+          )}
         </IonSplitPane>
       </IonReactRouter>
     </IonApp>

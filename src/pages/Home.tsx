@@ -13,11 +13,11 @@ import {
   IonCardHeader,
   IonIcon,
   IonCardContent,
-  IonPopover,
+  IonPopover
 } from "@ionic/react";
 import axios from "axios";
 import moment from "moment";
-import { arrowForward, } from "ionicons/icons";
+import { arrowForward } from "ionicons/icons";
 import { Paper, Button } from "@material-ui/core";
 
 const Home: React.FC = () => {
@@ -35,7 +35,7 @@ const Home: React.FC = () => {
         "https://birdwatchobservation.herokuapp.com/api/birdwatchobservation"
       )
       .then(res => {
-        localStorage.setItem("observations", JSON.stringify(res.data));//saving observations data to localstorage
+        localStorage.setItem("observations", JSON.stringify(res.data)); //saving observations data to localstorage
         setTimeout(function() {
           setIsLoading(false);
         }, 2500); //setting timeout for 2.5s and then disabling isloading
@@ -86,7 +86,21 @@ const Home: React.FC = () => {
     sortedObservation = observations;
   }
   return (
-    <IonPage>
+    <IonPage className="ion__home-container">
+      {localStorage.imgSrc && localStorage.imgSrc !== "" && (
+        <div className="full-image-view">
+          <span
+            className="fa fa-times text-light"
+            onClick={() => {
+              localStorage.removeItem("imgSrc");
+              document.location.href = "/";
+            }}
+          ></span>
+          <div>
+            <img src={localStorage.imgSrc} alt="fullScreen-images" />
+          </div>
+        </div>
+      )}
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
@@ -133,13 +147,20 @@ const Home: React.FC = () => {
             </h2>
           </IonList>
         ) : (
-          // fetching data and mapping 
+          // fetching data and mapping
           !isLoading &&
           sortedObservation.map((observation, index) => {
+            const colorChange =
+              observation["geoLongitude"] &&
+              observation["geoLatitude"] &&
+              (map || info) &&
+              localStorage.ID === observation["_id"]
+                ? true
+                : false;
             return (
               <Paper
                 key={index}
-                className={`mt-3 ${
+                className={`mt-4 ${
                   index + 1 === observations.length ? "mb-2" : ""
                 }`}
                 elevation={8}
@@ -151,6 +172,15 @@ const Home: React.FC = () => {
                       alt={observation["speciesName"]}
                       className="species-image"
                     />
+                    <div
+                      className="fullscreen-species-image"
+                      onClick={() => {
+                        localStorage.imgSrc = observation["speciesImage"];
+                        document.location.href = "/";
+                      }}
+                    >
+                      <i className="fa fa-expand"></i>
+                    </div>
                     <IonCardHeader className="ion-no-padding ion-no-margin py-2 px-3">
                       <div className="clearfix">
                         <span className="float-left species-name">
@@ -161,6 +191,7 @@ const Home: React.FC = () => {
                           onClick={() => {
                             ExpandDetails(observation["_id"]);
                             setInfo(!info);
+                            setMap(false);
                           }}
                         >
                           <IonIcon
@@ -178,7 +209,8 @@ const Home: React.FC = () => {
                         Rarity : {observation["rarity"]} &nbsp; &nbsp;
                         <span className="map-info-icon">
                           <i
-                            className="fa fa-map-marked-alt"
+                            className={`fa fa-map-marked-alt text-primary ${colorChange &&
+                              "text-dark"}`}
                             onClick={() => {
                               ExpandDetails(observation["_id"]);
                               setMap(!map);
@@ -187,7 +219,8 @@ const Home: React.FC = () => {
                           ></i>{" "}
                           &nbsp;
                           <i
-                            className="fa fa-info-circle"
+                            className={`fa fa-info-circle text-primary ${colorChange &&
+                              "text-dark"}`}
                             onClick={() => {
                               ExpandDetails(observation["_id"]);
                               setInfo(!info);
@@ -208,10 +241,11 @@ const Home: React.FC = () => {
                       observation["geoLongitude"] ? (
                         <iframe
                           title={observation["speciesName"]}
-                          src={`https://maps.google.com/maps?q=${observation["geoLatitude"]}, ${observation["geoLongitude"]}&z=15&output=embed`}
+                          src={`https://maps.google.com/maps?q=${observation["geoLatitude"]}, ${observation["geoLongitude"]}&z=10&output=embed`}
                           width="100%"
-                          height="255"
+                          height="275"
                           frameBorder="0"
+                          allowFullScreen
                         ></iframe>
                       ) : (
                         <div className="text-center text-light mt-5">
@@ -225,7 +259,7 @@ const Home: React.FC = () => {
                     <IonCardContent
                       className={`species-data-content ${
                         info && observation["_id"] === localStorage.ID
-                          ? "species-data ion-no-margin ion-no-padding"
+                          ? "species-data ion-no-margin"
                           : ""
                       }`}
                     >
