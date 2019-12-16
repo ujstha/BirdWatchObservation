@@ -143,13 +143,17 @@ ion-card-content.species-data-content {
   overflow-y: auto;
   font-family: "Raleway";
 }
-ion-card-content.species-data-content p {
-  font-size: 1.1em;
+ion-card-content.species-data-content span {
   padding: 2px;
+  font-size: 1em;
 }
-p > span {
-  font-size: 1.15em;
-  text-transform: capitalize;
+span p {
+  padding: 2px;
+  font-size: 1.2em !important;
+  text-transform: lowercase;
+}
+span p::first-letter {
+  text-transform: uppercase !important;
 }
 .fa-map-marked-alt,
 .fa-info-circle {

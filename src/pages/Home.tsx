@@ -56,7 +56,9 @@ const Home: React.FC = () => {
     }, 2000);
   }
 
-  React.useEffect(() => GetData(), []);
+  React.useEffect(() => {
+    GetData();
+  }, []);
 
   const ExpandDetails = (id: any) => {
     localStorage.setItem("ID", id); //saving ID in localhost
@@ -300,34 +302,34 @@ const Home: React.FC = () => {
                     >
                       {observation["geoLatitude"] &&
                         observation["geoLongitude"] && (
-                          <p style={{ fontSize: 12 }} className="text-center">
+                          <p style={{ fontSize: 13 }} className="text-center">
                             Image was taken at a location with{" "}
                             {observation["geoLatitude"]} Latitude and{" "}
                             {observation["geoLongitude"]} Longitude.
                           </p>
                         )}
-                      <p>
+                      <span>
                         Species Name : <br />
-                        <span>{observation["speciesName"]}</span>
-                      </p>
-                      <p>
+                        <p>{observation["speciesName"]}</p>
+                      </span>
+                      <span>
                         Species Rarity : <br />
-                        <span>{observation["rarity"]}</span>
-                      </p>
-                      <p>
+                        <p>{observation["rarity"]}</p>
+                      </span>
+                      <span>
                         Notes : <br />
-                        <span>{observation["notes"]}</span>
-                      </p>
+                        <p>{observation["notes"]}</p>
+                      </span>
                       {observation["timestamp"] && (
-                        <p>
+                        <span>
                           DateTimeOriginal : <br />
-                          <span>
+                          <p>
                             {moment
                               .unix(observation["timestamp"])
                               .format("Do MMM, YYYY HH:MM A")}
-                          </span>
+                          </p>
                           {/* timestamp is saved as number in db so need UNIX to get exact datetime */}
-                        </p>
+                        </span>
                       )}
                     </IonCardContent>
                   </div>

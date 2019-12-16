@@ -3,13 +3,15 @@ import { Redirect, Route } from "react-router-dom";
 import {
   IonApp,
   IonRouterOutlet,
-  IonSplitPane,
   IonTabs,
   IonTabBar,
   IonTabButton,
   IonIcon,
   setupConfig,
-  IonLabel
+  IonLabel,
+  IonSplitPane,
+  isPlatform,
+  IonPopover
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import { AppPage } from "./declarations";
@@ -67,7 +69,19 @@ const theme = createMuiTheme({
 const App: React.FC = () => (
   <MuiThemeProvider theme={theme}>
     <IonApp>
+      {isPlatform("desktop") && (
+        <IonPopover isOpen={true} onDidDismiss={() => false}>
+          <p
+            className="m-4 text-center"
+            style={{ fontSize: 18, fontFamily: "Raleway" }}
+          >
+            You are in desktop mode. Please press "F12" to view in mobile mode and
+            get best experience of the app.
+          </p>
+        </IonPopover>
+      )}
       <IonReactRouter>
+        {/* Enable IonSplitPane to enforces mobile view */}
         <IonSplitPane contentId="main">
           <Menu appPages={appPages} />
           {!localStorage.imgSrc || localStorage.imgSrc === "" ? (
@@ -110,7 +124,6 @@ const App: React.FC = () => (
                   component={AddObservation}
                   exact={true}
                 />
-                
               </IonRouterOutlet>
             </>
           )}
