@@ -120,6 +120,11 @@ const AddObservation: React.FC = () => {
                   {response}
                 </div>
               )}
+              {!navigator.onLine && (
+                <p className="text-danger text-center" style={{ fontSize: 16 }}>
+                  App is running in Offline mode. No data will be saved.
+                </p>
+              )}
               <IonLoading
                 isOpen={isLoading}
                 onDidDismiss={() => setIsLoading(false)}
@@ -197,6 +202,7 @@ const AddObservation: React.FC = () => {
                   <span>Note: .jpg and .jpeg formats are only allowed.</span>
                 </div>
                 {speciesImage &&
+                  imageType !== "" &&
                   imageType !== "image/jpeg" &&
                   imageType !== "image/jpg" && (
                     <div>
@@ -231,6 +237,7 @@ const AddObservation: React.FC = () => {
                     setResponse("");
                     setBase64(Object);
                     setImageName("");
+                    setImageType("");
                   }}
                 >
                   <IonIcon icon={close} /> &nbsp; Reset
