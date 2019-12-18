@@ -27,3 +27,10 @@ And copies data by capacitor for deploying in android device.
 NOTE: For this app to run with full function it needs a backend which is deployed in HEROKU.
 You can also run backend locally. For that you need to visit my other git repository. <br />
 Open [https://github.com/ujstha/BirdWatchObservation-server/] and follow the instructions to run it.
+
+## If BirdWatchObservation-server (backend) is run locally
+Please replace the <br />
+"proxy": "https://birdwatchobservation.herokuapp.com/"
+## With
+"proxy": "http://localhost:5000/"   <br />
+in `package.json` of BirdWatchObservation repo (frontend).
