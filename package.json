@@ -51,6 +51,5 @@
   "description": "An Ionic project",
   "devDependencies": {
     "@capacitor/cli": "1.4.0"
-  },
-  "proxy": "https://birdwatchobservation.herokuapp.com/"
+  }
 }

@@ -35,8 +35,9 @@ const OnlineView: React.FC = () => {
   //fetched data from server side when internet connection is available
   const GetData = () => {
     //need to call same thing two times so made one function and called that below.
+    //replace https://birdwatchobservation.herokuapp.com/ with http://localhost:5000/ (when backend is run locally)
     axios
-      .get("/api/birdwatchobservation")
+      .get("https://birdwatchobservation.herokuapp.com/api/birdwatchobservation")
       .then(res => {
         localStorage.setItem("observations", JSON.stringify(res.data)); //saving observations data to localstorage
         setTimeout(function() {

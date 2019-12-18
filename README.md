@@ -30,7 +30,8 @@ Open [https://github.com/ujstha/BirdWatchObservation-server/] and follow the ins
 
 ## If BirdWatchObservation-server (backend) is run locally
 Please replace the <br />
-"proxy": "https://birdwatchobservation.herokuapp.com/"
-## With
-"proxy": "http://localhost:5000/"   <br />
-in `package.json` of BirdWatchObservation repo (frontend).
+"https://birdwatchobservation.herokuapp.com/" <br />
+
+with  <br />
+"http://localhost:5000/"   <br />
+in `AddObservation.tsx` && `OnlineView.tsx` of BirdWatchObservation repo (a.k.a. frontend).

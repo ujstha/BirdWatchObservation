@@ -59,8 +59,9 @@ const AddObservation: React.FC = () => {
     formData.append("notes", notes);
 
     //axios POST method
+    //replace https://birdwatchobservation.herokuapp.com/ with http://localhost:5000/ (when backend is run locally)
     axios
-      .post("/api/birdwatchobservation", formData)
+      .post("https://birdwatchobservation.herokuapp.com/api/birdwatchobservation", formData)
       .then(res => {
         if (res.data === "Error : Uploading Data was not found.") {
           setIsLoading(false); //hiding loader on response.
