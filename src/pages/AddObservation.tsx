@@ -60,10 +60,7 @@ const AddObservation: React.FC = () => {
 
     //axios POST method
     axios
-      .post(
-        "https://birdwatchobservation.herokuapp.com/api/birdwatchobservation",
-        formData
-      )
+      .post("/api/birdwatchobservation", formData)
       .then(res => {
         if (res.data === "Error : Uploading Data was not found.") {
           setIsLoading(false); //hiding loader on response.

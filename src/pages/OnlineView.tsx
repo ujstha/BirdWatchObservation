@@ -36,9 +36,7 @@ const OnlineView: React.FC = () => {
   const GetData = () => {
     //need to call same thing two times so made one function and called that below.
     axios
-      .get(
-        "https://birdwatchobservation.herokuapp.com/api/birdwatchobservation"
-      )
+      .get("/api/birdwatchobservation")
       .then(res => {
         localStorage.setItem("observations", JSON.stringify(res.data)); //saving observations data to localstorage
         setTimeout(function() {
